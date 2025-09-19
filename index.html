@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtual Piano</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #f8fafc;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        
+        .piano-container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .piano-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #1f2937;
+            margin-bottom: 1rem;
+        }
+        
+        .piano-instructions {
+            margin-bottom: 2rem;
+            color: #6b7280;
+        }
+        
+        .piano-instructions p {
+            margin-bottom: 0.5rem;
+        }
+        
+        .piano-instructions .small {
+            font-size: 0.875rem;
+            color: #9ca3af;
+        }
+        
+        .piano-keyboard {
+            position: relative;
+            background: #e5e7eb;
+            padding: 1rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            max-width: 736px;
+            margin: 0 auto;
+        }
+        
+        .white-keys {
+            display: flex;
+            justify-content: center;
+        }
+        
+        .white-key {
+            width: 64px;
+            height: 256px;
+            background: white;
+            border: 1px solid #d1d5db;
+            border-radius: 0 0 0.75rem 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+            padding-bottom: 1rem;
+            user-select: none;
+            position: relative;
+        }
+        
+        .white-key:hover {
+            background: #f3f4f6;
+            transform: translateY(2px);
+        }
+        
+        .white-key:active, .white-key.playing {
+            background: #dbeafe;
+            border-color: #60a5fa;
+            transform: translateY(4px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .black-keys {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            display: flex;
+            justify-content: center;
+            width: calc(100% - 2rem);
+        }
+        
+        .black-key {
+            position: absolute;
+            width: 48px;
+            height: 160px;
+            background: #1f2937;
+            border: 1px solid #374151;
+            border-radius: 0 0 0.5rem 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+            padding-bottom: 1rem;
+            z-index: 10;
+            color: white;
+            user-select: none;
+        }
+        
+        .black-key:hover {
+            background: #374151;
+            transform: translateY(2px);
+        }
+        
+        .black-key:active, .black-key.playing {
+            background: #1e40af;
+            border-color: #3b82f6;
+            transform: translateY(4px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+        }
+        
+        /* Position black keys correctly */
+        .black-key:nth-child(1) { left: 40px; }   /* C# */
+        .black-key:nth-child(2) { left: 104px; }  /* D# */
+        .black-key:nth-child(3) { left: 232px; }  /* F# */
+        .black-key:nth-child(4) { left: 296px; }  /* G# */
+        .black-key:nth-child(5) { left: 360px; }  /* A# */
+        .black-key:nth-child(6) { left: 488px; }  /* C# */
+        .black-key:nth-child(7) { left: 552px; }  /* D# */
+        
+        .key-label {
+            font-size: 0.875rem;
+            font-weight: bold;
+            margin-bottom: 0.25rem;
+        }
+        
+        .note-label {
+            font-size: 0.75rem;
+            opacity: 0.8;
+        }
+        
+        .black-key .key-label {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 0.125rem 0.25rem;
+            border-radius: 0.25rem;
+            color: white;
+        }
+        
+        .footer-info {
+            margin-top: 2rem;
+            color: #9ca3af;
+            font-size: 0.875rem;
+        }
+        
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .piano-keyboard {
+                max-width: 100%;
+                transform: scale(0.8);
+                transform-origin: center;
+            }
+            
+            .piano-title {
+                font-size: 2rem;
+            }
+            
+            .white-key {
+                width: 48px;
+                height: 192px;
+            }
+            
+            .black-key {
+                width: 36px;
+                height: 120px;
+            }
+            
+            /* Adjust black key positions for mobile */
+            .black-key:nth-child(1) { left: 30px; }
+            .black-key:nth-child(2) { left: 78px; }
+            .black-key:nth-child(3) { left: 174px; }
+            .black-key:nth-child(4) { left: 222px; }
+            .black-key:nth-child(5) { left: 270px; }
+            .black-key:nth-child(6) { left: 366px; }
+            .black-key:nth-child(7) { left: 414px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="piano-container">
+        <h1 class="piano-title">🎹 Virtual Piano</h1>
+        
+        <div class="piano-instructions">
+            <p>Click the keys or use your keyboard to play!</p>
+            <p class="small">
+                Keyboard mapping: A-S-D-F-G-H-J-K-L for white keys, W-E-T-Y-U-O-P for black keys
+            </p>
+        </div>
+
+        <div class="piano-keyboard">
+            <!-- White keys -->
+            <div class="white-keys" id="whiteKeys"></div>
+            <!-- Black keys -->
+            <div class="black-keys" id="blackKeys"></div>
+        </div>
+
+        <div class="footer-info">
+            <p>🎵 Full working piano with real sound! 🎵</p>
+            <p><small>Hosted on GitHub Pages - works everywhere!</small></p>
+        </div>
+    </div>
+
+    <script>
+        // Note frequencies
+        const noteFrequencies = {
+            'C4': 261.63, 'C#4': 277.18, 'D4': 293.66, 'D#4': 311.13, 'E4': 329.63,
+            'F4': 349.23, 'F#4': 369.99, 'G4': 392.00, 'G#4': 415.30, 'A4': 440.00,
+            'A#4': 466.16, 'B4': 493.88, 'C5': 523.25, 'C#5': 554.37, 'D5': 587.33,
+            'D#5': 622.25, 'E5': 659.25, 'F5': 698.46, 'F#5': 739.99, 'G5': 783.99
+        };
+
+        const keyMappings = {
+            'a': 'C4', 'w': 'C#4', 's': 'D4', 'e': 'D#4', 'd': 'E4',
+            'f': 'F4', 't': 'F#4', 'g': 'G4', 'y': 'G#4', 'h': 'A4', 
+            'u': 'A#4', 'j': 'B4', 'k': 'C5', 'o': 'C#5', 'l': 'D5',
+            'p': 'D#5', ';': 'E5', "'": 'F5'
+        };
+
+        const pianoKeys = [
+            { note: 'C4', type: 'white', key: 'a' },
+            { note: 'C#4', type: 'black', key: 'w' },
+            { note: 'D4', type: 'white', key: 's' },
+            { note: 'D#4', type: 'black', key: 'e' },
+            { note: 'E4', type: 'white', key: 'd' },
+            { note: 'F4', type: 'white', key: 'f' },
+            { note: 'F#4', type: 'black', key: 't' },
+            { note: 'G4', type: 'white', key: 'g' },
+            { note: 'G#4', type: 'black', key: 'y' },
+            { note: 'A4', type: 'white', key: 'h' },
+            { note: 'A#4', type: 'black', key: 'u' },
+            { note: 'B4', type: 'white', key: 'j' },
+            { note: 'C5', type: 'white', key: 'k' },
+            { note: 'C#5', type: 'black', key: 'o' },
+            { note: 'D5', type: 'white', key: 'l' },
+            { note: 'D#5', type: 'black', key: 'p' },
+            { note: 'E5', type: 'white', key: ';' },
+            { note: 'F5', type: 'white', key: "'" }
+        ];
+
+        let audioContext = null;
+        let activeKeys = new Set();
+
+        // Initialize audio context
+        function initAudio() {
+            if (!audioContext) {
+                try {
+                    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                } catch (error) {
+                    console.error('Failed to initialize Web Audio API:', error);
+                }
+            }
+            
+            if (audioContext && audioContext.state === 'suspended') {
+                audioContext.resume();
+            }
+        }
+
+        // Play tone
+        function playTone(frequency, duration = 0.8) {
+            if (!audioContext) return;
+
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+
+            oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime);
+            oscillator.type = 'triangle';
+
+            // Natural envelope
+            gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+            gainNode.gain.linearRampToValueAtTime(0.3, audioContext.currentTime + 0.02);
+            gainNode.gain.linearRampToValueAtTime(0.2, audioContext.currentTime + duration * 0.1);
+            gainNode.gain.linearRampToValueAtTime(0.15, audioContext.currentTime + duration * 0.8);
+            gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + duration);
+
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + duration);
+        }
+
+        // Play note
+        function playNote(note) {
+            initAudio();
+            
+            const frequency = noteFrequencies[note];
+            if (frequency) {
+                playTone(frequency);
+                
+                // Visual feedback
+                const keyElement = document.querySelector(`[data-note="${note}"]`);
+                if (keyElement) {
+                    keyElement.classList.add('playing');
+                    setTimeout(() => {
+                        keyElement.classList.remove('playing');
+                    }, 300);
+                }
+            }
+        }
+
+        // Create piano keys
+        function createPianoKeys() {
+            const whiteKeysContainer = document.getElementById('whiteKeys');
+            const blackKeysContainer = document.getElementById('blackKeys');
+
+            // Create white keys
+            pianoKeys.filter(key => key.type === 'white').forEach(key => {
+                const keyElement = document.createElement('div');
+                keyElement.className = 'white-key';
+                keyElement.setAttribute('data-note', key.note);
+                keyElement.innerHTML = `
+                    <span class="key-label">${key.key.toUpperCase()}</span>
+                    <span class="note-label">${key.note}</span>
+                `;
+                keyElement.addEventListener('mousedown', () => playNote(key.note));
+                whiteKeysContainer.appendChild(keyElement);
+            });
+
+            // Create black keys
+            pianoKeys.filter(key => key.type === 'black').forEach(key => {
+                const whiteKeyIndex = pianoKeys.filter(k => k.type === 'white' && 
+                    pianoKeys.indexOf(k) < pianoKeys.indexOf(key)).length;
+                
+                const leftOffset = (whiteKeyIndex * 64) - 24;
+                
+                const keyElement = document.createElement('div');
+                keyElement.className = 'black-key';
+                keyElement.setAttribute('data-note', key.note);
+                keyElement.style.left = `${leftOffset + 4}px`;
+                keyElement.innerHTML = `
+                    <span class="key-label">${key.key.toUpperCase()}</span>
+                    <span class="note-label">${key.note}</span>
+                `;
+                keyElement.addEventListener('mousedown', () => playNote(key.note));
+                blackKeysContainer.appendChild(keyElement);
+            });
+        }
+
+        // Keyboard events
+        function handleKeyDown(event) {
+            const note = keyMappings[event.key.toLowerCase()];
+            if (note && !activeKeys.has(note)) {
+                activeKeys.add(note);
+                playNote(note);
+            }
+        }
+
+        function handleKeyUp(event) {
+            const note = keyMappings[event.key.toLowerCase()];
+            if (note) {
+                activeKeys.delete(note);
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            createPianoKeys();
+            
+            document.addEventListener('keydown', handleKeyDown);
+            document.addEventListener('keyup', handleKeyUp);
+            
+            // Initialize audio on first click
+            document.addEventListener('click', initAudio, { once: true });
+        });
+    </script>
+</body>
+</html>
