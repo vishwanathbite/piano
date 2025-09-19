@@ -3,31 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Virtual Piano</title>
+    <title>Ishaan's Fun Piano</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka+One:wght@400&family=Nunito:wght@400;600;700&display=swap');
+        
         body {
             margin: 0;
-            padding: 20px;
-            background: #f8fafc;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            padding: 15px;
+            background: linear-gradient(135deg, #87CEEB 0%, #98FB98 100%);
+            font-family: 'Nunito', sans-serif;
+            min-height: 100vh;
         }
         
         .piano-container {
-            max-width: 800px;
+            max-width: 900px;
             margin: 0 auto;
             text-align: center;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 25px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         }
         
         .piano-title {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: #1f2937;
+            font-family: 'Fredoka One', cursive;
+            font-size: 2.8rem;
+            color: #2E8B57;
             margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .dedication {
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.6rem;
+            color: #FF6B6B;
+            margin-bottom: 0.5rem;
+        }
+        
+        .creator {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
         }
         
         .piano-instructions {
-            margin-bottom: 2rem;
-            color: #6b7280;
+            margin-bottom: 1.5rem;
+            color: #333;
+            font-size: 1.1rem;
+            font-weight: 600;
         }
         
         .piano-instructions p {
@@ -35,169 +59,302 @@
         }
         
         .piano-instructions .small {
-            font-size: 0.875rem;
-            color: #9ca3af;
+            font-size: 0.95rem;
+            color: #666;
+            font-weight: 400;
         }
         
         .piano-keyboard {
             position: relative;
-            background: #e5e7eb;
-            padding: 1rem;
-            border-radius: 1rem;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            max-width: 736px;
+            background: linear-gradient(145deg, #ff9a9e, #fecfef, #fecfef, #ff9a9e);
+            padding: 1.5rem;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+            max-width: 750px;
             margin: 0 auto;
+            border: 3px solid #fff;
         }
         
         .white-keys {
             display: flex;
             justify-content: center;
+            gap: 3px;
         }
         
         .white-key {
-            width: 64px;
-            height: 256px;
-            background: white;
-            border: 1px solid #d1d5db;
-            border-radius: 0 0 0.75rem 0.75rem;
+            width: 65px;
+            height: 260px;
+            background: linear-gradient(180deg, #ffffff 0%, #f8f9ff 100%);
+            border: 2px solid #ddd;
+            border-radius: 0 0 12px 12px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
             align-items: center;
-            padding-bottom: 1rem;
+            padding-bottom: 12px;
             user-select: none;
-            position: relative;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
         
         .white-key:hover {
-            background: #f3f4f6;
-            transform: translateY(2px);
+            background: linear-gradient(180deg, #f0f8ff 0%, #e6f3ff 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
         }
         
         .white-key:active, .white-key.playing {
-            background: #dbeafe;
-            border-color: #60a5fa;
+            background: linear-gradient(180deg, #FFD700 0%, #FFA500 100%);
             transform: translateY(4px);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
         }
         
         .black-keys {
             position: absolute;
-            top: 1rem;
-            left: 1rem;
+            top: 1.5rem;
+            left: 1.5rem;
             display: flex;
             justify-content: center;
-            width: calc(100% - 2rem);
+            width: calc(100% - 3rem);
         }
         
         .black-key {
             position: absolute;
-            width: 48px;
+            width: 45px;
             height: 160px;
-            background: #1f2937;
-            border: 1px solid #374151;
-            border-radius: 0 0 0.5rem 0.5rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(180deg, #2c3e50 0%, #34495e 100%);
+            border: 2px solid #1a252f;
+            border-radius: 0 0 8px 8px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
             align-items: center;
-            padding-bottom: 1rem;
+            padding-bottom: 10px;
             z-index: 10;
             color: white;
             user-select: none;
         }
         
         .black-key:hover {
-            background: #374151;
-            transform: translateY(2px);
+            background: linear-gradient(180deg, #34495e 0%, #4a5f7a 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.4);
         }
         
         .black-key:active, .black-key.playing {
-            background: #1e40af;
-            border-color: #3b82f6;
+            background: linear-gradient(180deg, #e74c3c 0%, #c0392b 100%);
             transform: translateY(4px);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
         }
         
-        /* Position black keys correctly */
-        .black-key:nth-child(1) { left: 40px; }   /* C# */
-        .black-key:nth-child(2) { left: 104px; }  /* D# */
-        .black-key:nth-child(3) { left: 232px; }  /* F# */
-        .black-key:nth-child(4) { left: 296px; }  /* G# */
-        .black-key:nth-child(5) { left: 360px; }  /* A# */
-        .black-key:nth-child(6) { left: 488px; }  /* C# */
-        .black-key:nth-child(7) { left: 552px; }  /* D# */
+        /* Black key positions */
+        .black-key:nth-child(1) { left: 44px; }   /* C# */
+        .black-key:nth-child(2) { left: 112px; }  /* D# */
+        .black-key:nth-child(3) { left: 248px; }  /* F# */
+        .black-key:nth-child(4) { left: 316px; }  /* G# */
+        .black-key:nth-child(5) { left: 384px; }  /* A# */
+        .black-key:nth-child(6) { left: 520px; }  /* C# */
+        .black-key:nth-child(7) { left: 588px; }  /* D# */
         
         .key-label {
-            font-size: 0.875rem;
+            font-family: 'Fredoka One', cursive;
+            font-size: 1rem;
             font-weight: bold;
-            margin-bottom: 0.25rem;
+            margin-bottom: 0.3rem;
+            color: #333;
         }
         
         .note-label {
-            font-size: 0.75rem;
-            opacity: 0.8;
+            font-size: 0.8rem;
+            color: #666;
+            font-weight: 600;
         }
         
         .black-key .key-label {
-            background: rgba(0, 0, 0, 0.5);
-            padding: 0.125rem 0.25rem;
-            border-radius: 0.25rem;
-            color: white;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 3px 6px;
+            border-radius: 6px;
+            color: #333;
+            font-size: 0.9rem;
+        }
+        
+        .black-key .note-label {
+            color: #fff;
+            font-size: 0.75rem;
         }
         
         .footer-info {
-            margin-top: 2rem;
-            color: #9ca3af;
-            font-size: 0.875rem;
+            margin-top: 1.5rem;
+            color: #333;
+            font-size: 1rem;
+            font-weight: 600;
         }
         
-        /* Responsive design */
+        .footer-info p {
+            margin-bottom: 0.3rem;
+        }
+        
+        .emoji {
+            font-size: 1.3rem;
+        }
+        
+        /* Mobile and Tablet Optimization */
         @media (max-width: 768px) {
-            .piano-keyboard {
-                max-width: 100%;
-                transform: scale(0.8);
-                transform-origin: center;
+            body {
+                padding: 10px;
+            }
+            
+            .piano-container {
+                padding: 20px 15px;
             }
             
             .piano-title {
-                font-size: 2rem;
+                font-size: 2.2rem;
+                margin-bottom: 0.8rem;
+            }
+            
+            .dedication {
+                font-size: 1.3rem;
+            }
+            
+            .creator {
+                font-size: 1rem;
+            }
+            
+            .piano-instructions {
+                font-size: 1rem;
+                margin-bottom: 1.2rem;
+            }
+            
+            .piano-instructions .small {
+                font-size: 0.85rem;
+            }
+            
+            .piano-keyboard {
+                padding: 1rem;
+                max-width: 100%;
             }
             
             .white-key {
-                width: 48px;
-                height: 192px;
+                width: 50px;
+                height: 200px;
+                padding-bottom: 8px;
             }
             
             .black-key {
-                width: 36px;
+                width: 35px;
                 height: 120px;
+                padding-bottom: 6px;
+            }
+            
+            .key-label {
+                font-size: 0.85rem;
+                margin-bottom: 0.2rem;
+            }
+            
+            .note-label {
+                font-size: 0.7rem;
+            }
+            
+            .black-key .key-label {
+                font-size: 0.75rem;
+                padding: 2px 4px;
+            }
+            
+            .black-key .note-label {
+                font-size: 0.65rem;
             }
             
             /* Adjust black key positions for mobile */
-            .black-key:nth-child(1) { left: 30px; }
-            .black-key:nth-child(2) { left: 78px; }
-            .black-key:nth-child(3) { left: 174px; }
-            .black-key:nth-child(4) { left: 222px; }
-            .black-key:nth-child(5) { left: 270px; }
-            .black-key:nth-child(6) { left: 366px; }
-            .black-key:nth-child(7) { left: 414px; }
+            .black-key:nth-child(1) { left: 34px; }
+            .black-key:nth-child(2) { left: 87px; }
+            .black-key:nth-child(3) { left: 193px; }
+            .black-key:nth-child(4) { left: 246px; }
+            .black-key:nth-child(5) { left: 299px; }
+            .black-key:nth-child(6) { left: 405px; }
+            .black-key:nth-child(7) { left: 458px; }
+        }
+        
+        /* Extra small phones */
+        @media (max-width: 480px) {
+            .piano-title {
+                font-size: 1.8rem;
+            }
+            
+            .dedication {
+                font-size: 1.1rem;
+            }
+            
+            .piano-keyboard {
+                padding: 0.8rem;
+            }
+            
+            .white-key {
+                width: 42px;
+                height: 170px;
+            }
+            
+            .black-key {
+                width: 30px;
+                height: 100px;
+            }
+            
+            .key-label {
+                font-size: 0.75rem;
+            }
+            
+            .note-label {
+                font-size: 0.65rem;
+            }
+            
+            /* Adjust positions for very small screens */
+            .black-key:nth-child(1) { left: 29px; }
+            .black-key:nth-child(2) { left: 74px; }
+            .black-key:nth-child(3) { left: 164px; }
+            .black-key:nth-child(4) { left: 209px; }
+            .black-key:nth-child(5) { left: 254px; }
+            .black-key:nth-child(6) { left: 344px; }
+            .black-key:nth-child(7) { left: 389px; }
+        }
+        
+        /* Particle effect */
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #FFD700;
+            border-radius: 50%;
+            pointer-events: none;
+            animation: particle-float 0.8s ease-out forwards;
+        }
+        
+        @keyframes particle-float {
+            0% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-60px) scale(0);
+            }
         }
     </style>
 </head>
 <body>
     <div class="piano-container">
-        <h1 class="piano-title">🎹 Virtual Piano</h1>
+        <h1 class="piano-title">🎹 Ishaan's Magic Piano 🎹</h1>
+        
+        <div class="dedication">💝 Dedicated to Ishaan! 💝</div>
+        <div class="creator">Built with ❤️ by Dr. Vishwanath Bite</div>
         
         <div class="piano-instructions">
-            <p>Click the keys or use your keyboard to play!</p>
+            <p><span class="emoji">🎵</span> Click the keys or use your keyboard to make music! <span class="emoji">🎵</span></p>
             <p class="small">
-                Keyboard mapping: A-S-D-F-G-H-J-K-L for white keys, W-E-T-Y-U-O-P for black keys
+                🌈 Use keys: A-S-D-F-G-H-J-K-L for white keys, W-E-T-Y-U-O-P for black keys 🌈
             </p>
         </div>
 
@@ -209,8 +366,8 @@
         </div>
 
         <div class="footer-info">
-            <p>🎵 Full working piano with real sound! 🎵</p>
-            <p><small>Hosted on GitHub Pages - works everywhere!</small></p>
+            <p><span class="emoji">🎊</span> Have fun making beautiful music, Ishaan! <span class="emoji">🎊</span></p>
+            <p><small>✨ Every key press creates magic! ✨</small></p>
         </div>
     </div>
 
@@ -254,6 +411,21 @@
         let audioContext = null;
         let activeKeys = new Set();
 
+        // Create subtle particle effect
+        function createParticle(x, y) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = x + 'px';
+            particle.style.top = y + 'px';
+            document.body.appendChild(particle);
+            
+            setTimeout(() => {
+                if (document.body.contains(particle)) {
+                    document.body.removeChild(particle);
+                }
+            }, 800);
+        }
+
         // Initialize audio context
         function initAudio() {
             if (!audioContext) {
@@ -286,14 +458,13 @@
             gainNode.gain.setValueAtTime(0, audioContext.currentTime);
             gainNode.gain.linearRampToValueAtTime(0.3, audioContext.currentTime + 0.02);
             gainNode.gain.linearRampToValueAtTime(0.2, audioContext.currentTime + duration * 0.1);
-            gainNode.gain.linearRampToValueAtTime(0.15, audioContext.currentTime + duration * 0.8);
             gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + duration);
 
             oscillator.start(audioContext.currentTime);
             oscillator.stop(audioContext.currentTime + duration);
         }
 
-        // Play note
+        // Play note with effects
         function playNote(note) {
             initAudio();
             
@@ -305,6 +476,14 @@
                 const keyElement = document.querySelector(`[data-note="${note}"]`);
                 if (keyElement) {
                     keyElement.classList.add('playing');
+                    
+                    // Create simple particle effect
+                    const rect = keyElement.getBoundingClientRect();
+                    const centerX = rect.left + rect.width / 2;
+                    const centerY = rect.top + rect.height / 2;
+                    
+                    createParticle(centerX, centerY);
+                    
                     setTimeout(() => {
                         keyElement.classList.remove('playing');
                     }, 300);
@@ -327,25 +506,27 @@
                     <span class="note-label">${key.note}</span>
                 `;
                 keyElement.addEventListener('mousedown', () => playNote(key.note));
+                keyElement.addEventListener('touchstart', (e) => {
+                    e.preventDefault();
+                    playNote(key.note);
+                });
                 whiteKeysContainer.appendChild(keyElement);
             });
 
             // Create black keys
             pianoKeys.filter(key => key.type === 'black').forEach(key => {
-                const whiteKeyIndex = pianoKeys.filter(k => k.type === 'white' && 
-                    pianoKeys.indexOf(k) < pianoKeys.indexOf(key)).length;
-                
-                const leftOffset = (whiteKeyIndex * 64) - 24;
-                
                 const keyElement = document.createElement('div');
                 keyElement.className = 'black-key';
                 keyElement.setAttribute('data-note', key.note);
-                keyElement.style.left = `${leftOffset + 4}px`;
                 keyElement.innerHTML = `
                     <span class="key-label">${key.key.toUpperCase()}</span>
                     <span class="note-label">${key.note}</span>
                 `;
                 keyElement.addEventListener('mousedown', () => playNote(key.note));
+                keyElement.addEventListener('touchstart', (e) => {
+                    e.preventDefault();
+                    playNote(key.note);
+                });
                 blackKeysContainer.appendChild(keyElement);
             });
         }
@@ -366,15 +547,16 @@
             }
         }
 
-        // Initialize
+        // Initialize everything
         document.addEventListener('DOMContentLoaded', function() {
             createPianoKeys();
             
             document.addEventListener('keydown', handleKeyDown);
             document.addEventListener('keyup', handleKeyUp);
             
-            // Initialize audio on first click
+            // Initialize audio on first interaction
             document.addEventListener('click', initAudio, { once: true });
+            document.addEventListener('touchstart', initAudio, { once: true });
         });
     </script>
 </body>
